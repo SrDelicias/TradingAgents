@@ -221,3 +221,10 @@ __marimo__/
 # Enterprise env file (secrets) and generated run reports
 .env.enterprise
 reports/
+
+# Local paper-trading state (generated automatically; never commit account state)
+data/paper_portfolio.json
+data/paper_portfolio.json.tmp
+data/equity_history.json
+data/equity_history.json.tmp
+data/events.jsonl

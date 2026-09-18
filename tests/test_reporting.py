@@ -16,6 +16,7 @@ def _state():
         "investment_debate_state": {"judge_decision": "RM PLAN"},
         "trader_investment_plan": "TRADE",
         "risk_debate_state": {"judge_decision": "PM DECISION"},
+        "paper_trading_report": "PAPER EXECUTION",
     }
 
 
@@ -28,9 +29,11 @@ def test_write_report_tree_creates_files(tmp_path):
     assert (tmp_path / "2_research" / "manager.md").read_text() == "RM PLAN"
     assert (tmp_path / "3_trading" / "trader.md").read_text() == "TRADE"
     assert (tmp_path / "5_portfolio" / "decision.md").read_text() == "PM DECISION"
+    assert (tmp_path / "6_paper_trading" / "execution.md").read_text() == "PAPER EXECUTION"
     complete = out.read_text()
     assert "Trading Analysis Report: AAPL" in complete
     assert "MKT" in complete and "PM DECISION" in complete
+    assert "PAPER EXECUTION" in complete
 
 
 @pytest.mark.unit

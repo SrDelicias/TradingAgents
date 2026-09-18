@@ -95,6 +95,15 @@ def write_report_tree(final_state: dict, ticker: str, save_path) -> Path:
             (portfolio_dir / "decision.md").write_text(risk["judge_decision"], encoding="utf-8")
             sections.append(f"## V. Portfolio Manager Decision\n\n### Portfolio Manager\n{risk['judge_decision']}")
 
+    # 6. Deterministic paper-trading audit
+    if final_state.get("paper_trading_report"):
+        paper_dir = save_path / "6_paper_trading"
+        paper_dir.mkdir(exist_ok=True)
+        (paper_dir / "execution.md").write_text(
+            final_state["paper_trading_report"], encoding="utf-8"
+        )
+        sections.append(f"## VI. Paper Trading\n\n{final_state['paper_trading_report']}")
+
     # Write consolidated report
     header = f"# Trading Analysis Report: {ticker}\n\nGenerated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
     (save_path / "complete_report.md").write_text(header + "\n\n".join(sections), encoding="utf-8")

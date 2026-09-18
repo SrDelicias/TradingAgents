@@ -20,6 +20,10 @@ _ENV_OVERRIDES = {
     "TRADINGAGENTS_TEMPERATURE":          "temperature",
     "TRADINGAGENTS_LLM_MAX_RETRIES":      "llm_max_retries",
     "TRADINGAGENTS_MAX_TOKENS":           "max_tokens",
+    "TRADINGAGENTS_PAPER_TRADING_ENABLED": "paper_trading_enabled",
+    "TRADINGAGENTS_PAPER_PORTFOLIO_PATH":  "paper_portfolio_path",
+    "TRADINGAGENTS_PAPER_EQUITY_HISTORY_PATH": "paper_equity_history_path",
+    "TRADINGAGENTS_PAPER_EVENTS_PATH": "paper_events_path",
     # Provider-specific reasoning/thinking knobs (None = each provider's own
     # default). Settable here for non-interactive runs; the CLI also offers an
     # interactive choice, which is skipped when the matching var is set.
@@ -109,6 +113,11 @@ DEFAULT_CONFIG = _apply_env_overrides({
     # Checkpoint/resume: when True, LangGraph saves state after each node
     # so a crashed run can resume from the last successful step.
     "checkpoint_enabled": False,
+    # Local-only cash simulator. It has no real-broker connectivity.
+    "paper_trading_enabled": True,
+    "paper_portfolio_path": os.getenv("TRADINGAGENTS_PAPER_PORTFOLIO_PATH"),
+    "paper_equity_history_path": os.getenv("TRADINGAGENTS_PAPER_EQUITY_HISTORY_PATH"),
+    "paper_events_path": os.getenv("TRADINGAGENTS_PAPER_EVENTS_PATH"),
     # Output language for analyst reports and final decision
     # Internal agent debate stays in English for reasoning quality
     "output_language": "English",

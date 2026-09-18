@@ -143,6 +143,7 @@ class TradingAgentsGraph:
             self.deep_thinking_llm,
             self.tool_nodes,
             self.conditional_logic,
+            self.config,
         )
 
         self.propagator = Propagator(
@@ -603,6 +604,7 @@ class TradingAgentsGraph:
             },
             "investment_plan": final_state["investment_plan"],
             "final_trade_decision": final_state["final_trade_decision"],
+            "paper_trading_result": final_state.get("paper_trading_result", {}),
         }
 
         # Save to file. Reject ticker values that would escape the

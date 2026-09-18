@@ -80,6 +80,7 @@ class MessageBuffer:
         "Trading Team": ["Trader"],
         "Risk Management": ["Aggressive Analyst", "Neutral Analyst", "Conservative Analyst"],
         "Portfolio Management": ["Portfolio Manager"],
+        "Paper Trading": ["Paper Trading"],
     }
 
     # Analyst name mapping
@@ -101,6 +102,7 @@ class MessageBuffer:
         "investment_plan": (None, "Research Manager"),
         "trader_investment_plan": (None, "Trader"),
         "final_trade_decision": (None, "Portfolio Manager"),
+        "paper_trading_report": (None, "Paper Trading"),
     }
 
     def __init__(self, max_length=100):
@@ -209,6 +211,7 @@ class MessageBuffer:
                 "investment_plan": "Research Team Decision",
                 "trader_investment_plan": "Trading Team Plan",
                 "final_trade_decision": "Portfolio Management Decision",
+                "paper_trading_report": "Paper Trading",
             }
             self.current_report = (
                 f"### {section_titles[latest_section]}\n{latest_content}"
@@ -255,6 +258,10 @@ class MessageBuffer:
         if self.report_sections.get("final_trade_decision"):
             report_parts.append("## Portfolio Management Decision")
             report_parts.append(f"{self.report_sections['final_trade_decision']}")
+
+        if self.report_sections.get("paper_trading_report"):
+            report_parts.append("## Paper Trading")
+            report_parts.append(f"{self.report_sections['paper_trading_report']}")
 
         self.final_report = "\n\n".join(report_parts) if report_parts else None
 
@@ -825,6 +832,18 @@ def display_complete_report(final_state):
             console.print(Panel("[bold]V. Portfolio Manager Decision[/bold]", border_style="green"))
             console.print(Panel(Markdown(risk["judge_decision"]), title="Portfolio Manager", border_style="blue", padding=(1, 2)))
 
+    # VI. Paper Trading
+    if final_state.get("paper_trading_report"):
+        console.print(Panel("[bold]VI. Paper Trading[/bold]", border_style="cyan"))
+        console.print(
+            Panel(
+                Markdown(final_state["paper_trading_report"]),
+                title="Hard Risk Engine & Paper Broker",
+                border_style="blue",
+                padding=(1, 2),
+            )
+        )
+
 
 def update_research_team_status(status):
     """Update status for research team members (not Trader)."""
@@ -1237,6 +1256,13 @@ def run_analysis(checkpoint: bool | None = None):
                         message_buffer.update_agent_status("Conservative Analyst", "completed")
                         message_buffer.update_agent_status("Neutral Analyst", "completed")
                         message_buffer.update_agent_status("Portfolio Manager", "completed")
+
+                if chunk.get("paper_trading_report"):
+                    message_buffer.update_agent_status("Paper Trading", "in_progress")
+                    message_buffer.update_report_section(
+                        "paper_trading_report", chunk["paper_trading_report"]
+                    )
+                    message_buffer.update_agent_status("Paper Trading", "completed")
 
                 # Update the display
                 update_display(layout, stats_handler=stats_handler, start_time=start_time)
